@@ -1,0 +1,16 @@
+{
+  "presets": [
+    "env",
+    "stage-3"
+  ],
+  "plugins": [
+    "syntax-class-properties",
+    "transform-class-properties",
+    [
+      "transform-react-jsx",
+      {
+        "pragma": "Leact.createElement"
+      }
+    ]
+  ]
+}
