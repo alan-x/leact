@@ -1,35 +1,31 @@
 import LeactElement from "./LeactElement";
 
 class Leact {
-    static createElement(type, props, children) {
+    static createElement(type, props, ...children) {
 
         let ref = null
         let self = null
         let childElement = null
-
 
         if ((typeof type == 'string') && type.constructor == String) {
             switch (type) {
                 case 'p': {
                 }
                 case 'div': {
-                    self = type
-                    ref = this.createNodeElement(type)
+                    self = this.createNodeElement(type)
+                    ref = self
+                    self.props = props
 
-                    if (arguments.length - 2 > 0) {
-                        children = []
-                        for (let i = 2; i < arguments.length; i++) {
-                            children.push(arguments[i])
+                    if (children.length == 0) break
+
+                    childElement = children.map((child) => {
+                        if ((typeof child == 'string') && child.constructor == String) {
+                            ref.append(child)
+                        } else {
+                            ref.append(child.ref)
                         }
-                        childElement = children.map((child) => {
-                            if ((typeof child == 'string') && child.constructor == String) {
-                                ref.append(child)
-                            } else {
-                                ref.append(child.ref)
-                            }
-                            return child
-                        })
-                    }
+                        return child
+                    })
                     break
                 }
                 default: {
