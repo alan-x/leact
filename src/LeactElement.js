@@ -1,5 +1,3 @@
-import Component from "./Component";
-
 class LeactElement {
 
     type = null

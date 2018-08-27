@@ -14,16 +14,17 @@ class Leact {
                     ref = this.createNodeElement(type)
 
                     if (arguments.length - 2 > 0) {
-                        children=[]
-                        for (let i=2;i<arguments.length;i++){
+                        children = []
+                        for (let i = 2; i < arguments.length; i++) {
                             children.push(arguments[i])
                         }
-                        childElement = children.forEach((child) => {
+                        childElement = children.map((child) => {
                             if ((typeof child == 'string') && child.constructor == String) {
                                 ref.append(child)
                             } else {
                                 ref.append(child.ref)
                             }
+                            return child
                         })
                     }
                     break
@@ -41,6 +42,7 @@ class Leact {
             } else {
                 ref = element.ref
             }
+            childElement = [element]
 
         }
 

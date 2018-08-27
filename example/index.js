@@ -22,6 +22,7 @@ class App extends Component {
         </div>
     }
 }
+console.log(<App title="leact" content="i am leact"></App>)
 
 LeactDom.render(
     <App title="leact" content="i am leact"></App>,
