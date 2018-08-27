@@ -6,11 +6,14 @@ class Leact {
         let ref = null
         let self = null
         let childElement = null
+
+
         if ((typeof type == 'string') && type.constructor == String) {
             switch (type) {
                 case 'p': {
                 }
                 case 'div': {
+                    self = type
                     ref = this.createNodeElement(type)
 
                     if (arguments.length - 2 > 0) {
@@ -47,7 +50,7 @@ class Leact {
         }
 
 
-        let element = new LeactElement(type, ref, self, childElement)
+        let element = new LeactElement(ref, self, childElement)
 
         return element
 
