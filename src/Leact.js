@@ -1,65 +1,21 @@
 import LeactElement from "./LeactElement";
 
 class Leact {
+    static flatten(arr) {
+        return [].concat(...arr)
+    }
+
     static createElement(type, props, ...children) {
-
-        let ref = null
-        let self = null
-        let childElement = null
-
-        if ((typeof type == 'string') && type.constructor == String) {
-            switch (type) {
-                case 'p': {
-                }
-                case 'div': {
-                    self = this.createNodeElement(type)
-                    ref = self
-                    self.props = props
-
-                    if (children.length == 0) break
-
-                    childElement = children.map((child) => {
-                        if ((typeof child == 'string') && child.constructor == String) {
-                            ref.append(child)
-                        } else {
-                            ref.append(child.ref)
-                        }
-                        return child
-                    })
-                    break
-                }
-                default: {
-                    ref = this.createTextElement(type)
-                }
-            }
+        if (typeof(type) === 'string') {
+            return new LeactElement(type, props, Leact.flatten(children))
         } else if (type instanceof Function) {
-            self = new type()
-            self.props = props
-            let element = self.render()
-            if ((typeof element == 'string') && element.constructor == String) {
-                ref = element
-            } else {
-                ref = element.ref
-            }
-            childElement = [element]
-
+            type = new type()
+            type.props = props
+            let comp = type.render()
+            return comp
         }
-
-
-        let element = new LeactElement(ref, self, childElement)
-
-        return element
-
     }
 
-
-    static createTextElement(type) {
-        return document.createTextNode(type)
-    }
-
-    static createNodeElement(type) {
-        return document.createElement(type)
-    }
 }
 
 export default Leact

@@ -1,12 +1,12 @@
 class LeactElement {
 
-    ref = null
-    self = null
+    type = null
+    props = null
     children = null
 
-    constructor( ref, self, children) {
-        this.ref = ref
-        this.self = self
+    constructor(type, props, children) {
+        this.type = type
+        this.props = props || {}
         this.children = children
     }
 
