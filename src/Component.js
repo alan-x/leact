@@ -12,12 +12,13 @@ class Component {
 
     setState(data, callback) {
         let next = {...this.state, ...data}
-        // this.componentWillUpdate(this.props, next);
+        if (!this.shouldComponentUpdate(this.props, next)) {
+            return
+        }
         this.state = next
         callback && callback(this.state)
         LeactDom.patch(this.$$element, this.render())
-        // this.componentDidUpdate(this.props, prevState);
-
+        this.componentDidUpdate(this.props, next);
     }
 
     componentWillMount() {
@@ -29,10 +30,10 @@ class Component {
     componentDidMount() {
     }
 
-    componentWillReceiveProps() {
+    componentWillReceiveProps(nextProps,state) {
     }
 
-    shouldComponentUpdate() {
+    shouldComponentUpdate(props, state) {
         return true
 
     }
@@ -40,9 +41,11 @@ class Component {
     componentWillUpdate(nextProps, props) {
 
     }
-    componentDidUpdate(props,preProps){
+
+    componentDidUpdate(props, preProps) {
 
     }
+
     componentWillUnmount() {
     }
 }

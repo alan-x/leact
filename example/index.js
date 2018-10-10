@@ -45,24 +45,24 @@ class SmallComponent extends Component {
             value: ''
         }
     }
+
     componentWillMount() {
-        console.log('componentWillMount')
     }
 
     componentDidMount() {
-        console.log('componentDidMount')
     }
 
     componentDidMount() {
-        console.log('componentDidMount')
     }
 
-    componentWillReceiveProps() {
-        console.log('componentWillReceiveProps')
+
+    componentWillReceiveProps(nextProps, state) {
+        this.setState({
+            value: nextProps.value
+        })
     }
 
     shouldComponentUpdate() {
-        console.log('shouldComponentUpdate')
         return true
 
     }
@@ -70,19 +70,17 @@ class SmallComponent extends Component {
     componentWillUpdate(nextProps, props) {
 
     }
-    componentDidUpdate(props,preProps){
+
+    componentDidUpdate(props, preProps) {
 
     }
+
     componentWillUnmount() {
-        console.log('Content::componentWillUnmount')
     }
 
     render() {
-        return (<div style={{background:'red'}}>
+        return (<div style={{background: 'red'}}>
             <p>{this.state.value}</p>
-            <input type="text" value={this.state.value} onChange={(e) => {
-                this.setState({value: e.target.value})
-            }}/>
         </div>)
     }
 
@@ -92,10 +90,18 @@ class App extends Component {
 
     constructor(props) {
         super(props)
+        this.state = {
+            value: ''
+        }
     }
 
     render() {
-        return <SmallComponent></SmallComponent>
+        return <div>
+            <SmallComponent value={this.state.value}></SmallComponent>
+            <input type="text" value={this.state.value} onChange={(e) => {
+                this.setState({value: e.target.value})
+            }}/>
+        </div>
     }
 }
 

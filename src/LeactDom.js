@@ -2,6 +2,7 @@ class LeactDom {
     static isFirst = true
 
     static render(vDom, parent = null) {
+        // console.log('render', vDom, [parent])
         /*
         如果 vDom 是空的
         就啥都不干
@@ -56,7 +57,7 @@ class LeactDom {
             let component = new vDom.type(vDom.props)
             component.componentWillMount()
             let compVDom = component.render()
-            let element=this.render(compVDom, parent)
+            let element = this.render(compVDom, parent)
             component.$$element = element
             component.componentDidMount()
             component.$$element.$$component = component
@@ -68,31 +69,57 @@ class LeactDom {
     }
 
     static patch(dom, vDom, parent = dom.parentNode) {
+        console.log('patch', [dom], vDom, [parent])
+
 
         // 都是字符串, 改变内容就好了
         if (dom.nodeType === 3 && typeof vDom === 'string' && dom !== vDom) {
+            console.log(1)
             dom.textContent = vDom
             return
         }
         // 原本是字符串, 但是新的不是字符串
         if (dom.nodeType === 3 && typeof vDom === 'object' && typeof vDom.type === 'string') {
+            console.log(2)
+
             parent.replaceChild(this.render(vDom), dom)
+
             return
         }
-
+        // 原本是对象, 新的也是对象, 并且是 html 元素
         if (dom.nodeType === 1 && typeof vDom === 'object' && typeof vDom.type === 'string') {
 
+            // 如果两个类型不相同
             if (dom.nodeName.toLowerCase() !== vDom.type) {
-                parent.replaceChild(this.render(vDom), dom)
+                let element = this.render(vDom)
+                vDom.$$element = element
+                parent.replaceChild(element, dom)
                 return
             }
 
             let len = Math.max(dom.children.length, vDom.children.length)
             for (let i = 0; i < len; i++) {
-                this.patch(dom.childNodes[i], vDom.children[i], dom)
-                return
-            }
+                console.log(3)
 
+                let component = dom.childNodes[i].$$component
+                let nextProps = vDom.children[i].props
+                this.patch(dom.childNodes[i], vDom.children[i], dom)
+
+                // if (component && component.shouldComponentUpdate && component.shouldComponentUpdate(nextProps, component.state)) {
+                // }
+            }
+            return
+        }
+        if (dom.nodeType === 1 && typeof vDom === 'object' && typeof vDom.type === 'function') {
+            console.log('patch3', [dom], vDom, [parent])
+
+            let component = dom.$$component
+            // if (!component.shouldComponentUpdate(vDom.props, component.state)) return
+            // component.componentWillUpdate()
+            component.props = vDom.props
+            component.componentWillReceiveProps(vDom.props, component.state)
+            // component.$$element = element
+            // component.componentDidUpdate()
         }
 
     }
@@ -108,6 +135,8 @@ class LeactDom {
                 Object.keys(style).forEach(s => {
                     element.style[s] = style[s]
                 })
+            } else if (key === 'className') {
+                element.className = props[key]
             }
 
         })
