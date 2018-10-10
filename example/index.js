@@ -1,33 +1,54 @@
 import LeactDom from "../src/LeactDom";
-import Leact from "../src/Leact";
+import Leact from './../src/Leact'
 import Component from "../src/Component";
+// LeactDom.render(
+//     '111',
+//     document.getElementById('app')
+// )
 
-class Detail extends Component {
-    render() {
-        return <p>{this.props.content}</p>
-    }
-}
+// LeactDom.render(
+//     false,
+//     document.getElementById('app')
+// )
 
-class Title extends Component {
-    render() {
-        return <p>{this.props.title}</p>
+// LeactDom.render(
+//     <div>
+//         <p>this is a p</p>
+//     </div>,
+//     document.getElementById('app')
+// )
+
+class SmallComponent extends Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            value: ''
+        }
     }
+
+    render() {
+        return (<div>
+            <p>{this.state.value}</p>
+            <input type="text" value={this.state.value} onChange={(e) => {
+                this.setState({value: e.target.value})
+            }}/>
+        </div>)
+    }
+
 }
 
 class App extends Component {
-    constructor() {
-        super()
+
+    constructor(props) {
+        super(props)
     }
 
     render() {
-        return <div>
-            <Title title={this.props.title}></Title>
-            <Detail content={this.props.content}></Detail>
-        </div>
+        return <SmallComponent></SmallComponent>
     }
 }
 
 LeactDom.render(
-    <App title={"leact"} content={"i am leact"}/>,
+    <App/>,
     document.getElementById('app')
 )
