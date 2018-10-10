@@ -12,6 +12,26 @@ import Component from "../src/Component";
 // )
 
 // LeactDom.render(
+//     '',
+//     document.getElementById('app')
+// )
+
+// LeactDom.render(
+//     null,
+//     document.getElementById('app')
+// )
+
+// LeactDom.render(
+//     undefined,
+//     document.getElementById('app')
+// )
+
+// LeactDom.render(
+//     NaN,
+//     document.getElementById('app')
+// )
+
+// LeactDom.render(
 //     <div>
 //         <p>this is a p</p>
 //     </div>,
@@ -25,9 +45,40 @@ class SmallComponent extends Component {
             value: ''
         }
     }
+    componentWillMount() {
+        console.log('componentWillMount')
+    }
+
+    componentDidMount() {
+        console.log('componentDidMount')
+    }
+
+    componentDidMount() {
+        console.log('componentDidMount')
+    }
+
+    componentWillReceiveProps() {
+        console.log('componentWillReceiveProps')
+    }
+
+    shouldComponentUpdate() {
+        console.log('shouldComponentUpdate')
+        return true
+
+    }
+
+    componentWillUpdate(nextProps, props) {
+
+    }
+    componentDidUpdate(props,preProps){
+
+    }
+    componentWillUnmount() {
+        console.log('Content::componentWillUnmount')
+    }
 
     render() {
-        return (<div>
+        return (<div style={{background:'red'}}>
             <p>{this.state.value}</p>
             <input type="text" value={this.state.value} onChange={(e) => {
                 this.setState({value: e.target.value})

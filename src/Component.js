@@ -11,9 +11,39 @@ class Component {
     }
 
     setState(data, callback) {
-        this.state = {...this.state, ...data}
+        let next = {...this.state, ...data}
+        // this.componentWillUpdate(this.props, next);
+        this.state = next
         callback && callback(this.state)
-        LeactDom.patch(this.$$element,this.render())
+        LeactDom.patch(this.$$element, this.render())
+        // this.componentDidUpdate(this.props, prevState);
+
+    }
+
+    componentWillMount() {
+    }
+
+    componentDidMount() {
+    }
+
+    componentDidMount() {
+    }
+
+    componentWillReceiveProps() {
+    }
+
+    shouldComponentUpdate() {
+        return true
+
+    }
+
+    componentWillUpdate(nextProps, props) {
+
+    }
+    componentDidUpdate(props,preProps){
+
+    }
+    componentWillUnmount() {
     }
 }
 
