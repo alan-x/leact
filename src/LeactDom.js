@@ -1,7 +1,4 @@
-import Leact from "./Leact";
-
 class LeactDom {
-    static isFirst = true
 
     static render(vDom, parent = null) {
 
@@ -23,13 +20,9 @@ class LeactDom {
          */
 
         if (['string', 'number'].includes(typeof vDom)) {
-
             let element = document.createTextNode(vDom)
-
             element.$$vDom = vDom
-
             parent && parent.appendChild(element)
-
             return element
 
         }
@@ -77,16 +70,13 @@ class LeactDom {
                 this.render(v, parent)
             })
             return
-
         }
-
 
         throw `could not find this type of vDom: ${vDom}`
     }
 
     static patch(dom, vDom, parent = dom.parentNode) {
-        console.log('patch', [dom], vDom, [parent])
-
+        // console.log('patch', [dom], vDom, [parent])
         // 创建
         if (dom === undefined) {
             this.render(vDom, parent)
@@ -104,15 +94,12 @@ class LeactDom {
         }
         // 更新 原本是字符串, 但是新的不是字符串
         if (dom.nodeType === 3 && typeof vDom === 'object' && typeof vDom.type === 'string') {
-            console.log('patch1', [dom], vDom, [parent])
-
             parent.replaceChild(this.render(vDom), dom)
-
             return
         }
         // 更新 原本是对象, 新的也是对象, 并且是 html 元素
         if (dom.nodeType === 1 && typeof vDom === 'object' && typeof vDom.type === 'string') {
-            console.log('patch2', [dom], vDom, [parent])
+            // console.log('patch2', [dom], vDom, [parent])
             // 如果两个类型不相同
             if (dom.nodeName.toLowerCase() !== vDom.type) {
                 let element = this.render(vDom)
@@ -120,22 +107,20 @@ class LeactDom {
                 parent.replaceChild(element, dom)
                 return
             }
-            this.mapPropsToAttribute(vDom.props,dom)
+            this.mapPropsToAttribute(vDom.props, dom)
             let len = Math.max(dom.children.length, vDom.children.length)
             for (let i = 0; i < len; i++) {
                 this.patch(dom.childNodes[i], vDom.children[i], dom)
             }
             return
         }
-        // 更新
+        // 更新 原本是对象, 新的也是对象, 并且是组件
         if (dom.nodeType === 1 && typeof vDom === 'object' && typeof vDom.type === 'function') {
-            console.log('patch3', [dom], vDom, [parent])
-
             let component = dom.$$component
-
             let next = vDom && vDom.props || {}
+            component.componentWillUpdate()
             component.componentWillReceiveProps(next, component.state)
-
+            component.componentDidUpdate()
             return
         }
         throw 'error'
@@ -144,21 +129,26 @@ class LeactDom {
 
     static mapPropsToAttribute(props, element) {
         Object.keys(props).forEach((key) => {
-            let newKey = key
-            if (key === 'onChange') {
-                newKey = 'oninput'
-                element[newKey.toLowerCase()] = props[key]
-            } else if (key === 'style') {
+            // 处理 onchange 为 oninput
+            if (key === 'style') {
                 let style = props[key]
                 Object.keys(style).forEach(s => {
                     element.style[s] = style[s]
                 })
+                // 处理 className
             } else if (key === 'className') {
                 element.className = props[key]
+                // 处理事件绑定
             } else if (key.startsWith('on')) {
+                let newKey = key
+                // 处理 onchange 为 oninput
+                if (key === 'onChange') {
+                    newKey = 'oninput'
+                }
                 element[newKey.toLowerCase()] = props[key]
+            } else {
+                element[key.toLowerCase()] = props[key]
             }
-
         })
     }
 }
