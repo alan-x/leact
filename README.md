@@ -13,8 +13,9 @@
 - `createStore(reducer:Funciton,initState:Object,enhance:Function)`: 创建一个 store
 - `combineReducers(reducers:Object)`: 将多个 reucer 合并
 - `applyMiddleware(...middlewares:Function)`: 添加中间件
-```javascript
 
+### 案例
+```javascript
 
 function counter(state = 0, action = {}) {
     switch (action.type) {
