@@ -1,8 +1,10 @@
+import Leact from "./Leact";
+
 class LeactDom {
     static isFirst = true
 
     static render(vDom, parent = null) {
-        // console.log('render', vDom, [parent])
+
         /*
         如果 vDom 是空的
         就啥都不干
@@ -19,11 +21,17 @@ class LeactDom {
         如果传入了父元素
         就直接挂在到父元素上
          */
+
         if (['string', 'number'].includes(typeof vDom)) {
+
             let element = document.createTextNode(vDom)
+
             element.$$vDom = vDom
+
             parent && parent.appendChild(element)
+
             return element
+
         }
         /*
         如果 vDom 对象, vDom.type 是字符串
@@ -64,6 +72,14 @@ class LeactDom {
             component.$$element.$$vDom = compVDom
             return element
         }
+        if (Array.isArray(vDom)) {
+            vDom.forEach((v) => {
+                this.render(v, parent)
+            })
+            return
+
+        }
+
 
         throw `could not find this type of vDom: ${vDom}`
     }
@@ -71,24 +87,32 @@ class LeactDom {
     static patch(dom, vDom, parent = dom.parentNode) {
         console.log('patch', [dom], vDom, [parent])
 
-
-        // 都是字符串, 改变内容就好了
+        // 创建
+        if (dom === undefined) {
+            this.render(vDom, parent)
+            return
+        }
+        // 删除
+        if (vDom === undefined) {
+            dom.remove()
+            return
+        }
+        // 更新 都是字符串, 改变内容就好了
         if (dom.nodeType === 3 && typeof vDom === 'string' && dom !== vDom) {
-            console.log(1)
             dom.textContent = vDom
             return
         }
-        // 原本是字符串, 但是新的不是字符串
+        // 更新 原本是字符串, 但是新的不是字符串
         if (dom.nodeType === 3 && typeof vDom === 'object' && typeof vDom.type === 'string') {
-            console.log(2)
+            console.log('patch1', [dom], vDom, [parent])
 
             parent.replaceChild(this.render(vDom), dom)
 
             return
         }
-        // 原本是对象, 新的也是对象, 并且是 html 元素
+        // 更新 原本是对象, 新的也是对象, 并且是 html 元素
         if (dom.nodeType === 1 && typeof vDom === 'object' && typeof vDom.type === 'string') {
-
+            console.log('patch2', [dom], vDom, [parent])
             // 如果两个类型不相同
             if (dom.nodeName.toLowerCase() !== vDom.type) {
                 let element = this.render(vDom)
@@ -96,31 +120,25 @@ class LeactDom {
                 parent.replaceChild(element, dom)
                 return
             }
-
+            this.mapPropsToAttribute(vDom.props,dom)
             let len = Math.max(dom.children.length, vDom.children.length)
             for (let i = 0; i < len; i++) {
-                console.log(3)
-
-                let component = dom.childNodes[i].$$component
-                let nextProps = vDom.children[i].props
                 this.patch(dom.childNodes[i], vDom.children[i], dom)
-
-                // if (component && component.shouldComponentUpdate && component.shouldComponentUpdate(nextProps, component.state)) {
-                // }
             }
             return
         }
+        // 更新
         if (dom.nodeType === 1 && typeof vDom === 'object' && typeof vDom.type === 'function') {
             console.log('patch3', [dom], vDom, [parent])
 
             let component = dom.$$component
-            // if (!component.shouldComponentUpdate(vDom.props, component.state)) return
-            // component.componentWillUpdate()
-            component.props = vDom.props
-            component.componentWillReceiveProps(vDom.props, component.state)
-            // component.$$element = element
-            // component.componentDidUpdate()
+
+            let next = vDom && vDom.props || {}
+            component.componentWillReceiveProps(next, component.state)
+
+            return
         }
+        throw 'error'
 
     }
 
@@ -137,6 +155,8 @@ class LeactDom {
                 })
             } else if (key === 'className') {
                 element.className = props[key]
+            } else if (key.startsWith('on')) {
+                element[newKey.toLowerCase()] = props[key]
             }
 
         })
