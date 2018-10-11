@@ -1,14 +1,16 @@
-class Route {
+class Router {
     static callbackMap = {}
+
     static match = {
         path: '',
         data: {}
     }
+
     static before = () => {
     }
+
     static after = () => {
     }
-
 
     static beforeHook(before) {
         this.before = before
@@ -18,9 +20,10 @@ class Route {
         this.after = after
     }
 
-    static init(){
+    static init() {
         this.push(window.location.pathname)
     }
+
     static register(path, callback) {
         let unregister = () => {
             delete this.callbackMap[path]
@@ -30,8 +33,7 @@ class Route {
     }
 
     static push(path, data = {}) {
-        this.before(path, data, this.match)
-        window.history.pushState(data, '', path)
+
         this.match = {
             path, data
         }
@@ -55,7 +57,7 @@ class Route {
                         if (pathPatternTmep === pathRealtemp) {
                             tempMatch = true
                         } else if (pathPatternTmep.includes(':')) {
-                            this.match={...this.match,params:{[pathPatternTmep.replace(':','')]:pathRealtemp}}
+                            this.match = {...this.match, params: {[pathPatternTmep.replace(':', '')]: pathRealtemp}}
                             tempMatch = true
                         }
                         tempMatch == false
@@ -64,12 +66,13 @@ class Route {
                     isMatch = tempMatch
                 }
             }
-
-            this.callbackMap[key](isMatch, this.match, data||{})
+            if (!this.before(path, data, this.match)) return
+            window.history.pushState(data, '', path)
+            this.callbackMap[key](isMatch, this.match, data || {})
         })
 
         this.after(this.match)
     }
 }
 
-export default Route
+export default Router
