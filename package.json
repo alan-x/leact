@@ -1,11 +1,12 @@
 {
-  "name": "helloworld",
+  "name": "@followwinter/leact",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack"
+    "build": "webpack",
+    "pub":"npm publish --access=public"
   },
   "keywords": [],
   "author": "",
