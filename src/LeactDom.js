@@ -1,7 +1,7 @@
 class LeactDom {
 
     static render(vDom, parent = null) {
-
+        console.log('render', vDom)
         /*
         如果 vDom 是空的
         就啥都不干
@@ -41,6 +41,7 @@ class LeactDom {
             element.$$vDom = vDom
 
             this.mapPropsToAttribute(vDom.props, element)
+            vDom.props.children = vDom.children
             vDom.children.forEach((child) => {
                 this.render(child, element)
             })
@@ -54,9 +55,11 @@ class LeactDom {
         和相关的声明周期
          */
         if (typeof vDom === 'object' && typeof vDom.type === 'function') {
+            console.log('fuction')
             // 组件的 construct 调用
             let component = new vDom.type(vDom.props)
             component.componentWillMount()
+            component.props.children=vDom.children
             let compVDom = component.render()
             let element = this.render(compVDom, parent)
             component.$$element = element
@@ -66,10 +69,11 @@ class LeactDom {
             return element
         }
         if (Array.isArray(vDom)) {
+            let children=[]
             vDom.forEach((v) => {
-                this.render(v, parent)
+                children[children.length]=this.render(v, parent)
             })
-            return
+            return children
         }
 
         throw `could not find this type of vDom: ${vDom}`
@@ -146,7 +150,9 @@ class LeactDom {
                     newKey = 'oninput'
                 }
                 element[newKey.toLowerCase()] = props[key]
-            } else {
+            } else if (key === 'children') {
+            }
+            else {
                 element[key.toLowerCase()] = props[key]
             }
         })

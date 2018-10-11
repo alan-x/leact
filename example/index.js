@@ -37,75 +37,89 @@ import Component from "../src/Component";
 //     </div>,
 //     document.getElementById('app')
 // )
-
-class SmallComponent extends Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            value: ''
-        }
-    }
-
-    componentWillMount() {
-    }
-
-    componentDidMount() {
-    }
-
-    componentDidMount() {
-    }
-
-
-    componentWillReceiveProps(nextProps, state) {
-        this.setState({
-            value: nextProps.value
-        })
-    }
-
-    shouldComponentUpdate() {
-        return true
-
-    }
-
-    componentWillUpdate(nextProps, props) {
-
-    }
-
-    componentDidUpdate(props, preProps) {
-
-    }
-
-    componentWillUnmount() {
-    }
-
-    render() {
-        return (<div style={{background: 'red'}}>
-            <p>{this.state.value}</p>
-        </div>)
-    }
-
-}
-
+//
 class App extends Component {
-
-    constructor(props) {
-        super(props)
-        this.state = {
-            value: ''
-        }
-    }
-
     render() {
-        return <div>
-            <SmallComponent value={this.state.value}></SmallComponent>
-            <input type="text" value={this.state.value} onChange={(e) => {
-                this.setState({value: e.target.value})
-            }}/>
-        </div>
+        return this.props.children
     }
 }
 
 LeactDom.render(
-    <App/>,
+    <App>
+        fuck2
+    </App>,
     document.getElementById('app')
 )
+
+//
+// class SmallComponent extends Component {
+//     constructor(props) {
+//         super(props)
+//         this.state = {
+//             value: ''
+//         }
+//     }
+//
+//     componentWillMount() {
+//     }
+//
+//     componentDidMount() {
+//     }
+//
+//     componentDidMount() {
+//     }
+//
+//
+//     componentWillReceiveProps(nextProps, state) {
+//         this.setState({
+//             value: nextProps.value
+//         })
+//     }
+//
+//     shouldComponentUpdate() {
+//         return true
+//
+//     }
+//
+//     componentWillUpdate(nextProps, props) {
+//
+//     }
+//
+//     componentDidUpdate(props, preProps) {
+//
+//     }
+//
+//     componentWillUnmount() {
+//     }
+//
+//     render() {
+//         return (<div style={{background: 'red'}}>
+//             <p>{this.state.value}</p>
+//         </div>)
+//     }
+//
+// }
+//
+// class App extends Component {
+//
+//     constructor(props) {
+//         super(props)
+//         this.state = {
+//             value: ''
+//         }
+//     }
+//
+//     render() {
+//         return <div>
+//             <SmallComponent value={this.state.value}></SmallComponent>
+//             <input type="text" value={this.state.value} onChange={(e) => {
+//                 this.setState({value: e.target.value})
+//             }}/>
+//         </div>
+//     }
+// }
+//
+// LeactDom.render(
+//     <App/>,
+//     document.getElementById('app')
+// )
