@@ -1,6 +1,6 @@
 {
-  "name": "@followwinter/route",
-  "version": "1.0.0",
+  "name": "@followwinter/ledux",
+  "version": "1.0.1",
   "description": "",
   "main": "dist/bundle.js",
   "scripts": {

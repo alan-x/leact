@@ -1,4 +1,6 @@
-import {combineReducers, applyMiddleware, createStore, subscribe} from '@followwinter/ledux'
+import * as ledux from './../src/ledux'
+import {combineReducers} from "./../src/ledux";
+import {applyMiddleware} from "./../src/ledux";
 
 function counter(state = 0, action = {}) {
     switch (action.type) {
@@ -33,7 +35,7 @@ const before = store => storeDispatch => action => {
     return storeDispatch(action)
 }
 
-const store = createStore(
+const store = ledux.createStore(
     combineReducers({
         counter, counter2
     }),
@@ -41,7 +43,7 @@ const store = createStore(
     applyMiddleware(before)
 )
 
-subscribe(() => {
+ledux.subscribe(() => {
     console.log(store.getState())
 })
 
