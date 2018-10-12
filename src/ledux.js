@@ -1,5 +1,9 @@
+class Ledux {
+
+}
+
 Ledux.prototype.state
-Ledux.prototype.callbackList=[]
+Ledux.prototype.callbackList = []
 
 function compose(...funcs) {
     if (funcs.length === 0) {
