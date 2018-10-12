@@ -1,23 +1,10 @@
 class Router {
-    static callbackMap = {}
-
-    static match = {
-        path: '',
-        data: {}
-    }
-
-    static before = () => {
-    }
-
-    static after = () => {
-    }
-
     static beforeHook(before) {
-        this.before = before
+        window.Router.before = before
     }
 
     static afterHook(after) {
-        this.after = after
+        window.Router.after = after
     }
 
     static init() {
@@ -26,20 +13,20 @@ class Router {
 
     static register(path, callback) {
         let unregister = () => {
-            delete this.callbackMap[path]
+            delete window.Router.callbackMap[path]
         }
-        this.callbackMap[path] = callback
+        window.Router.callbackMap[path] = callback
         return unregister
     }
 
     static push(path, data = {}) {
-
-        this.match = {
+        window.Router.match = {
             path, data
         }
         //['detail','1']
+        window.Router.before(path, data, window.Router.match)
         let pathReal = path.split('/')
-        Object.keys(this.callbackMap).forEach(key => {
+        Object.keys(window.Router.callbackMap).forEach(key => {
             let isMatch = false
 
             if (!key.includes(':') && key === path) {
@@ -57,7 +44,10 @@ class Router {
                         if (pathPatternTmep === pathRealtemp) {
                             tempMatch = true
                         } else if (pathPatternTmep.includes(':')) {
-                            this.match = {...this.match, params: {[pathPatternTmep.replace(':', '')]: pathRealtemp}}
+                            window.Router.match = {
+                                ...window.Router.match,
+                                params: {[pathPatternTmep.replace(':', '')]: pathRealtemp}
+                            }
                             tempMatch = true
                         }
                         tempMatch == false
@@ -66,13 +56,23 @@ class Router {
                     isMatch = tempMatch
                 }
             }
-            if (!this.before(path, data, this.match)) return
             window.history.pushState(data, '', path)
-            this.callbackMap[key](isMatch, this.match, data || {})
+            window.Router.callbackMap[key](isMatch, window.Router.match, data || {})
         })
 
-        this.after(this.match)
+        window.Router.after(window.Router.match)
     }
+}
+
+window.Router = {}
+window.Router.callbackMap = {}
+window.Router.match = {
+    path: '',
+    data: {}
+}
+window.Router.before = () => {
+}
+window.Router.after = () => {
 }
 
 export default Router

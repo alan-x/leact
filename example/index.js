@@ -18,17 +18,22 @@ Router.afterHook((match) => {
 
 // 注册路由
 Router.register('/article', (isMatch, match, data) => {
+    console.log({isMatch, match, data})
+
     if (!isMatch) return
     $content.innerText = `这是文章页面, 收到数据: ${data.data}`
 })
 // 注册路由
 Router.register('/mine', (isMatch, match, data) => {
+    console.log({isMatch, match, data})
+
     if (!isMatch) return
     $content.innerText = `这是个人中心, 收到数据: ${data.data}`
 })
 // 注册路由
 Router.register('/detail/:id', (isMatch, match, data) => {
-    console.log(isMatch, match, data)
+    console.log({isMatch, match, data})
+
     if (!isMatch) return
     $content.innerText = `这是个人中心, 收到数据: ${data.data}, URL参数:${match.params.id}`
 })

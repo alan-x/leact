@@ -1,10 +1,11 @@
 {
-  "name": "route",
+  "name": "@followwinter/router",
   "version": "1.0.0",
   "description": "",
   "main": "dist/bundle.js",
   "scripts": {
-    "build": "webpack"
+    "build": "webpack",
+    "pub": "npm publish --access=public"
   },
   "repository": {
     "type": "git",
