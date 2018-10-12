@@ -22,18 +22,18 @@ function calculateState(reducers, action) {
     if (typeof reducers === 'object') {
         Object.keys(reducers).forEach(reducer => {
             console.log(reducer)
-            Ledux.state[reducer] = reducers[reducer](Ledux.state[reducer], action)
+            Ledux.prototype.state[reducer] = reducers[reducer](Ledux.prototype.state[reducer], action)
         })
         return
     } else if (typeof reducers === 'function') {
-        Ledux.state = reducers(Ledux.state, action)
+        Ledux.prototype.state = reducers(Ledux.prototype.state, action)
         return
     }
     throw 'error typeof reducer:' + typeof reducers
 }
 
 function createStore(reducers, initState = {}, enhance) {
-    Ledux.state = initState
+    Ledux.prototype.state = initState
     if (typeof enhance === 'function') return enhance(createStore)(reducers, initState)
 
     calculateState(reducers)
@@ -41,12 +41,12 @@ function createStore(reducers, initState = {}, enhance) {
     return {
         dispatch: (action, callback) => {
             calculateState(reducers, action)
-            callback && callback(Ledux.state)
-            Ledux.callbackList.forEach(callback => {
+            callback && callback(Ledux.prototype.state)
+            Ledux.prototype.callbackList.forEach(callback => {
                 callback()
             })
         },
-        getState: () => Ledux.state
+        getState: () => Ledux.prototype.state
     }
 }
 
@@ -56,10 +56,10 @@ function combineReducers(reducers) {
 
 
 function subscribe(callback) {
-    let index = Ledux.callbackList.length
-    Ledux.callbackList.push(callback)
+    let index = Ledux.prototype.callbackList.length
+    Ledux.prototype.callbackList.push(callback)
     return () => {
-        Ledux.callbackList.splice(index, 1)
+        Ledux.prototype.callbackList.splice(index, 1)
     }
 }
 

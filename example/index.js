@@ -1,5 +1,6 @@
 import {combineReducers, applyMiddleware, createStore, subscribe} from '@followwinter/ledux'
 
+
 function counter(state = 0, action = {}) {
     switch (action.type) {
         case ACTION_INCREMENT:
@@ -41,9 +42,8 @@ const store = createStore(
     applyMiddleware(before)
 )
 
-subscribe(() => {
-    console.log(store.getState())
-})
+import './other'
+
 
 store.dispatch(increment())
 
