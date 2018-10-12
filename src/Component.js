@@ -17,7 +17,6 @@ class Component {
         }
         this.state = next
         callback && callback(this.state)
-        console.log(this)
         LeactDom.patch(this.$$element, this.render())
         this.componentDidUpdate(this.props, next);
     }

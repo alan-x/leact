@@ -112,7 +112,7 @@ class LeactDom {
             return
         }
         // 更新 原本是字符串, 但是新的不是字符串
-        if (dom.nodeType === 3 && typeof vDom === 'object' && typeof vDom.type === 'string') {
+        if (dom.nodeType === 3 && ((typeof vDom === 'string')||(typeof vDom ==='number')) && dom !== vDom) {
             parent.replaceChild(this.render(vDom), dom)
             return
         }
