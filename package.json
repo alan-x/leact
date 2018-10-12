@@ -1,11 +1,11 @@
 {
   "name": "@followwinter/ledux",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "",
   "main": "dist/bundle.js",
   "scripts": {
     "build": "webpack",
-    "pub": "webpack&&npm publish --access=public"
+    "pub": "npm publish --access=public"
   },
   "repository": {
     "type": "git",
