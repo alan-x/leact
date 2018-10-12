@@ -1,9 +1,12 @@
-import {combineReducers, applyMiddleware, createStore, subscribe} from '@followwinter/ledux'
+import Leact, {Component, LeactDom} from "@followwinter/leact";
+import connect, {Provider,combineReducers, applyMiddleware, createStore, subscribe} from "@followwinter/leact-ledux";
 
 function counter(state = 0, action = {}) {
     switch (action.type) {
         case ACTION_INCREMENT:
             return state + 1
+        case ACTION_DECREMENT:
+            return state - 1
         default:
             return state
     }
@@ -13,18 +16,25 @@ function counter(state = 0, action = {}) {
 function counter2(state = 0, action = {}) {
     switch (action.type) {
         case ACTION_INCREMENT:
-
             return state + 1
+        case ACTION_DECREMENT:
+            return state - 1
         default:
             return state
     }
 }
 
 const ACTION_INCREMENT = 'INCREMENT'
+const ACTION_DECREMENT = 'DECREMENT'
 
 const increment = () => {
     return {
         type: ACTION_INCREMENT
+    }
+}
+const decrement = () => {
+    return {
+        type: ACTION_DECREMENT
     }
 }
 
@@ -41,9 +51,55 @@ const store = createStore(
     applyMiddleware(before)
 )
 
-subscribe(() => {
-    console.log(store.getState())
-})
 
-store.dispatch(increment())
+class App extends Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            counter: props.counter
+        }
+    }
+
+    render() {
+        return (<div>
+            <p>{this.state.counter || ''}</p>
+            <button onClick={() => this.handleIncrement()}>+</button>
+            <button onClick={() => this.handleDecrement()}>-</button>
+        </div>)
+    }
+
+    componentWillReceiveProps(nextProps) {
+        console.log({nextProps})
+        this.setState({
+            counter: nextProps.counter
+        })
+    }
+
+    handleIncrement() {
+        this.props.increment()
+    }
+
+    handleDecrement() {
+        this.props.decrement()
+    }
+}
+
+let MyApp = connect((state) => {
+    return {
+        counter: state.counter
+    }
+}, (dispatch) => {
+    return {
+        increment: () => dispatch(increment()),
+        decrement: () => dispatch(decrement())
+    }
+})(App)
+
+LeactDom.render(
+    <Provider store={store}>
+        <MyApp/>
+    </Provider>,
+    document.getElementById('app')
+)
+
 

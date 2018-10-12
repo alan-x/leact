@@ -1,10 +1,9 @@
-import {combineReducers, applyMiddleware, createStore, subscribe} from './../src/ledux'
 import Leact, {Component, LeactDom} from "@followwinter/leact";
 // import Leact from './Leact'
 // import LeactDom from './LeactDom'
 // import Component from './Component'
 
-import connect, {Provider} from './../src/leact-ledux'
+import connect, {Provider,combineReducers, applyMiddleware, createStore, subscribe} from './../src/leact-ledux'
 
 function counter(state = 0, action = {}) {
     switch (action.type) {

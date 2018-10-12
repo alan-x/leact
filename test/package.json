@@ -2,7 +2,7 @@
   "name": "test",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/bundle.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -11,7 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "@followwinter/leact": "^1.0.4",
-    "@followwinter/ledux": "^1.0.6"
+    "@followwinter/ledux": "^1.0.10"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",

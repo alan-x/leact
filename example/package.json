@@ -10,6 +10,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@followwinter/ledux": "^1.0.0"
+    "@followwinter/leact": "^1.0.4",
+    "@followwinter/leact-ledux": "^1.0.4",
+    "@followwinter/ledux": "^1.0.6"
   }
 }

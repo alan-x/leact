@@ -14,7 +14,6 @@ function connect(mapStateToProps, mapDispatchToProps) {
                 subscribe(() => {
                     let nextProps = mapStateToProps && mapStateToProps(store.getState()) || {}
                     let actions = mapDispatchToProps && mapDispatchToProps(store.dispatch) || {}
-                    console.log({...nextProps, ...actions})
                     this.setState({...nextProps, ...actions})
                 })
 
@@ -53,4 +52,4 @@ class Provider extends Component {
 }
 
 export default connect
-export {Provider}
+export {Provider,combineReducers, applyMiddleware, createStore, subscribe}
