@@ -1,9 +1,6 @@
-class Ledux {
-
-}
-
-Ledux.prototype.state
-Ledux.prototype.callbackList = []
+window.Ledux = {}
+window.Ledux.state
+window.Ledux.callbackList = []
 
 function compose(...funcs) {
     if (funcs.length === 0) {
@@ -21,19 +18,18 @@ function compose(...funcs) {
 function calculateState(reducers, action) {
     if (typeof reducers === 'object') {
         Object.keys(reducers).forEach(reducer => {
-            console.log(reducer)
-            Ledux.prototype.state[reducer] = reducers[reducer](Ledux.prototype.state[reducer], action)
+            Ledux.state[reducer] = reducers[reducer](Ledux.state[reducer], action)
         })
         return
     } else if (typeof reducers === 'function') {
-        Ledux.prototype.state = reducers(Ledux.prototype.state, action)
+        Ledux.state = reducers(Ledux.state, action)
         return
     }
     throw 'error typeof reducer:' + typeof reducers
 }
 
 function createStore(reducers, initState = {}, enhance) {
-    Ledux.prototype.state = initState
+    Ledux.state = initState
     if (typeof enhance === 'function') return enhance(createStore)(reducers, initState)
 
     calculateState(reducers)
@@ -41,12 +37,12 @@ function createStore(reducers, initState = {}, enhance) {
     return {
         dispatch: (action, callback) => {
             calculateState(reducers, action)
-            callback && callback(Ledux.prototype.state)
-            Ledux.prototype.callbackList.forEach(callback => {
+            callback && callback(Ledux.state)
+            Ledux.callbackList.forEach(callback => {
                 callback()
             })
         },
-        getState: () => Ledux.prototype.state
+        getState: () => Ledux.state
     }
 }
 
@@ -56,10 +52,10 @@ function combineReducers(reducers) {
 
 
 function subscribe(callback) {
-    let index = Ledux.prototype.callbackList.length
-    Ledux.prototype.callbackList.push(callback)
+    let index = Ledux.callbackList.length
+    Ledux.callbackList.push(callback)
     return () => {
-        Ledux.prototype.callbackList.splice(index, 1)
+        Ledux.callbackList.splice(index, 1)
     }
 }
 
