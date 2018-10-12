@@ -55,28 +55,43 @@ class LeactDom {
         和相关的声明周期
          */
         if (typeof vDom === 'object' && typeof vDom.type === 'function') {
-            console.log('fuction')
+            console.log('render:fuction', vDom)
             // 组件的 construct 调用
             let component = new vDom.type(vDom.props)
             component.componentWillMount()
-            component.props.children=vDom.children
+            component.props.children = vDom.children
+
             let compVDom = component.render()
             let element = this.render(compVDom, parent)
             component.$$element = element
-            component.componentDidMount()
-            component.$$element.$$component = component
-            component.$$element.$$vDom = compVDom
+            component.$$element.$$component=component
+            component.$$element.$$vDom=vDom
+            component.$$element.$$vDom.$$component=component
+            try {
+                if (typeof compVDom.type === 'function' && !(component instanceof compVDom.type)) {
+                    let newComponent = new compVDom.type(compVDom.props)
+                    newComponent.componentWillMount()
+                    newComponent.props.children = compVDom.children
+                    newComponent.$$element = element
+                    newComponent.$$element.$$component = newComponent
+                    newComponent.$$element.$$vDom = compVDom
+                    newComponent.$$element.$$vDom.$$component = newComponent
+                    component.$$element = newComponent.$$element
+                }
+            } catch (e) {
+                console.log(e)
+            }
+
             return element
         }
         if (Array.isArray(vDom)) {
-            let children=[]
+            let children = []
             vDom.forEach((v) => {
-                children[children.length]=this.render(v, parent)
+                children[children.length] = this.render(v, parent)
             })
             return children
         }
-
-        throw `could not find this type of vDom: ${vDom}`
+        this.render('', parent)
     }
 
     static patch(dom, vDom, parent = dom.parentNode) {
@@ -103,7 +118,7 @@ class LeactDom {
         }
         // 更新 原本是对象, 新的也是对象, 并且是 html 元素
         if (dom.nodeType === 1 && typeof vDom === 'object' && typeof vDom.type === 'string') {
-            // console.log('patch2', [dom], vDom, [parent])
+            // console.log('patch:string', [dom], vDom, [parent])
             // 如果两个类型不相同
             if (dom.nodeName.toLowerCase() !== vDom.type) {
                 let element = this.render(vDom)
@@ -120,11 +135,18 @@ class LeactDom {
         }
         // 更新 原本是对象, 新的也是对象, 并且是组件
         if (dom.nodeType === 1 && typeof vDom === 'object' && typeof vDom.type === 'function') {
+            // console.log('patch:function', [dom], vDom, [parent])
             let component = dom.$$component
+            console.log(dom.$$component)
             let next = vDom && vDom.props || {}
             component.componentWillUpdate()
+
             component.componentWillReceiveProps(next, component.state)
+
+            // this.patch(dom, vdom, parent)
             component.componentDidUpdate()
+
+
             return
         }
         throw 'error'
