@@ -12,6 +12,13 @@ class LeactDom {
         直接返回
          */
         if (null === vDom) {
+            return null
+        }
+
+        if (Array.isArray(vDom) && vDom.length !== 0) {
+            vDom.forEach(v => {
+                this.render(v, parent)
+            })
             return
         }
         /*
@@ -69,6 +76,8 @@ class LeactDom {
 
             let compVDom = component.render()
             let element = this.render(compVDom, parent)
+            if (element === undefined) return
+
             component.$$element = element
             component.$$element.$$component = component
             component.$$element.$$vDom = vDom

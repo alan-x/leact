@@ -79,56 +79,56 @@ import Component from "../src/Component";
 
 
 // 高阶组件
-const connect = (WrappedComponent) => {
-    return class Control extends Component {
-        constructor(props) {
-            super(props)
-            this.state = {
-                name: 1,
-            }
-            setInterval(() => {
-                this.setState({
-                    name: ++this.state.name
-                })
-            }, 2000)
-
-        }
-
-        componentWillReceiveProps(nextProps) {
-
-        }
-
-        render() {
-                return <WrappedComponent {...this.state}/>
-        }
-    }
-}
-
-class App extends Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            name: this.props.name
-        }
-    }
-
-    render() {
-        return <p>{this.state.name || ''}</p>
-    }
-
-    componentWillReceiveProps(nextProps, state) {
-        // console.log('componentWillReceiveProps',nextProps)
-        this.setState({
-            name: nextProps.name
-        })
-    }
-}
-
-let MyApp = connect(App)
-LeactDom.render(
-    <MyApp/>,
-    document.getElementById('app')
-)
+// const connect = (WrappedComponent) => {
+//     return class Control extends Component {
+//         constructor(props) {
+//             super(props)
+//             this.state = {
+//                 name: 1,
+//             }
+//             setInterval(() => {
+//                 this.setState({
+//                     name: ++this.state.name
+//                 })
+//             }, 2000)
+//`
+//         }
+//
+//         componentWillReceiveProps(nextProps) {
+//
+//         }
+//
+//         render() {
+//                 return <WrappedComponent {...this.state}/>
+//         }
+//     }
+// }
+//
+// class App extends Component {
+//     constructor(props) {
+//         super(props)
+//         this.state = {
+//             name: this.props.name
+//         }
+//     }
+//
+//     render() {
+//         return <p>{this.state.name || ''}</p>
+//     }
+//
+//     componentWillReceiveProps(nextProps, state) {
+//         // console.log('componentWillReceiveProps',nextProps)
+//         this.setState({
+//             name: nextProps.name
+//         })
+//     }
+// }
+//
+// let MyApp = connect(App)
+// LeactDom.render(
+//     <MyApp/>,
+//     document.getElementById('app')
+// )
 
 // class Article extends Component {
 //     render() {
