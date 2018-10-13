@@ -1,7 +1,11 @@
+let renderCount = 0
+let patchCount = 0
+
 class LeactDom {
 
     static render(vDom, parent = null) {
-        console.log('render', vDom)
+        ++renderCount
+        // console.log(renderCount, 'render', vDom)
         /*
         如果 vDom 是空的
         就啥都不干
@@ -20,6 +24,7 @@ class LeactDom {
          */
 
         if (['string', 'number'].includes(typeof vDom)) {
+            // console.log(renderCount, 'render:string|number -> text')
             let element = document.createTextNode(vDom)
             element.$$vDom = vDom
             parent && parent.appendChild(element)
@@ -36,6 +41,7 @@ class LeactDom {
         就直接挂在到父元素上
          */
         if (typeof vDom === 'object' && typeof vDom.type === 'string') {
+            // console.log(renderCount, 'render:tag -> element')
 
             let element = document.createElement(vDom.type)
             element.$$vDom = vDom
@@ -55,7 +61,7 @@ class LeactDom {
         和相关的声明周期
          */
         if (typeof vDom === 'object' && typeof vDom.type === 'function') {
-            console.log('render:fuction', vDom)
+            // console.log(renderCount, 'render:component -> element')
             // 组件的 construct 调用
             let component = new vDom.type(vDom.props)
             component.componentWillMount()
@@ -64,9 +70,9 @@ class LeactDom {
             let compVDom = component.render()
             let element = this.render(compVDom, parent)
             component.$$element = element
-            component.$$element.$$component=component
-            component.$$element.$$vDom=vDom
-            component.$$element.$$vDom.$$component=component
+            component.$$element.$$component = component
+            component.$$element.$$vDom = vDom
+            component.$$element.$$vDom.$$component = component
             try {
                 if (typeof compVDom.type === 'function' && !(component instanceof compVDom.type)) {
                     let newComponent = new compVDom.type(compVDom.props)
@@ -84,41 +90,50 @@ class LeactDom {
 
             return element
         }
-        if (Array.isArray(vDom)) {
-            let children = []
-            vDom.forEach((v) => {
-                children[children.length] = this.render(v, parent)
-            })
-            return children
-        }
-        this.render('', parent)
+        throw 'error ' + vDom
     }
 
     static patch(dom, vDom, parent = dom.parentNode) {
-        // console.log('patch', [dom], vDom, [parent])
+        ++patchCount
+        // console.log(patchCount, 'patch', [dom], [vDom], [parent])
         // 创建
         if (dom === undefined) {
+            // console.log(patchCount, 'patch:create', [dom], vDom, [parent])
             this.render(vDom, parent)
             return
         }
         // 删除
-        if (vDom === undefined) {
+        if (vDom === undefined || vDom === null) {
+            console.log(patchCount, 'patch:remove', [dom], vDom, [parent])
             dom.remove()
             return
         }
+
         // 更新 都是字符串, 改变内容就好了
-        if (dom.nodeType === 3 && typeof vDom === 'string' && dom !== vDom) {
+        if (dom.nodeType === 3 && ((typeof vDom === 'string') || (typeof vDom === 'number'))) {
+            // console.log(patchCount, 'patch:text->text', [dom], vDom, [parent])
+            if (dom.textContent === vDom) return
             dom.textContent = vDom
             return
         }
-        // 更新 原本是字符串, 但是新的不是字符串
-        if (dom.nodeType === 3 && ((typeof vDom === 'string')||(typeof vDom ==='number')) && dom !== vDom) {
-            parent.replaceChild(this.render(vDom), dom)
+        // 更新 原本是字符串, 新的是组件
+        if (dom.nodeType === 3 && typeof vDom === 'object' && typeof vDom.type === 'function') {
+            // console.log(patchCount, 'patch:string->function', [dom], vDom, [parent])
+            let element = this.render(vDom)
+            parent.replaceChild(element, dom)
+            return
+        }
+
+        // 更新 原本是对象, 新的是字符串
+        if (dom.nodeType === 1 && typeof vDom === 'string') {
+            // console.log(patchCount, 'patch:object->string', [dom], vDom, [parent])
+            let element = this.render(vDom)
+            parent.replaceChild(element, dom)
             return
         }
         // 更新 原本是对象, 新的也是对象, 并且是 html 元素
         if (dom.nodeType === 1 && typeof vDom === 'object' && typeof vDom.type === 'string') {
-            // console.log('patch:string', [dom], vDom, [parent])
+            // console.log(patchCount, 'patch:string', [dom], vDom, [parent])
             // 如果两个类型不相同
             if (dom.nodeName.toLowerCase() !== vDom.type) {
                 let element = this.render(vDom)
@@ -135,17 +150,11 @@ class LeactDom {
         }
         // 更新 原本是对象, 新的也是对象, 并且是组件
         if (dom.nodeType === 1 && typeof vDom === 'object' && typeof vDom.type === 'function') {
-            // console.log('patch:function', [dom], vDom, [parent])
+            // console.log(patchCount, 'patch:function', [dom], vDom, [parent])
             let component = dom.$$component
-            console.log(dom.$$component)
-            let next = vDom && vDom.props || {}
             component.componentWillUpdate()
-
-            component.componentWillReceiveProps(next, component.state)
-
-            // this.patch(dom, vdom, parent)
+            component.componentWillReceiveProps({...vDom.props}, component.state)
             component.componentDidUpdate()
-
 
             return
         }

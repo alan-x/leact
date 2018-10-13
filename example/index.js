@@ -53,29 +53,86 @@ import Component from "../src/Component";
 //     document.getElementById('app')
 // )
 
+
+// class App extends Component {
+//     constructor(props) {
+//         super(props)
+//         this.state = {
+//             isMatch: true
+//         }
+//         setInterval(() => {
+//             this.setState({
+//                 isMatch:!this.state.isMatch
+//             })
+//         },2000)
+//     }
+//
+//     render() {
+//         return this.state.isMatch?'match':'no match'
+//     }
+// }
+//
+// LeactDom.render(
+//     <App/>,
+//     document.getElementById('app')
+// )
+
+
 // 高阶组件
-// const connect = (WrappedComponent) => {
-//     return class Control extends Component {
-//         constructor(props) {
-//             super(props)
-//             this.state = {
-//                 name: '1',
-//             }
-//             setTimeout(() => {
-//                 this.setState({
-//                     name: '2'
-//                 })
-//             }, 2000)
-//
-//         }
-//
-//         componentWillReceiveProps(nextProps) {
-//
-//         }
-//
-//         render() {
-//             return <WrappedComponent {...this.state}/>
-//         }
+const connect = (WrappedComponent) => {
+    return class Control extends Component {
+        constructor(props) {
+            super(props)
+            this.state = {
+                name: 1,
+            }
+            setInterval(() => {
+                this.setState({
+                    name: ++this.state.name
+                })
+            }, 2000)
+
+        }
+
+        componentWillReceiveProps(nextProps) {
+
+        }
+
+        render() {
+                return <WrappedComponent {...this.state}/>
+        }
+    }
+}
+
+class App extends Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            name: this.props.name
+        }
+    }
+
+    render() {
+        return <p>{this.state.name || ''}</p>
+    }
+
+    componentWillReceiveProps(nextProps, state) {
+        // console.log('componentWillReceiveProps',nextProps)
+        this.setState({
+            name: nextProps.name
+        })
+    }
+}
+
+let MyApp = connect(App)
+LeactDom.render(
+    <MyApp/>,
+    document.getElementById('app')
+)
+
+// class Article extends Component {
+//     render() {
+//         return 'article'
 //     }
 // }
 //
@@ -83,27 +140,42 @@ import Component from "../src/Component";
 //     constructor(props) {
 //         super(props)
 //         this.state = {
-//             name: this.props.name
+//             isMatch: true
 //         }
+//
+//         setTimeout(() => {
+//             this.setState({
+//                 isMatch: !this.state.isMatch
+//             })
+//             setTimeout(() => {
+//                 this.setState({
+//                     isMatch: !this.state.isMatch
+//                 })
+//                 setTimeout(() => {
+//                     this.setState({
+//                         isMatch: !this.state.isMatch
+//                     })
+//                 }, 2000)
+//                 console.log('---')
+//             }, 2000)
+//             console.log('---')
+//         }, 2000)
 //     }
 //
 //     render() {
-//         return <p>{this.state.name || ''}</p>
-//     }
-//
-//     componentWillReceiveProps(nextProps, state) {
-//
-//         this.setState({
-//             name: nextProps.name
-//         })
+//         return <div>
+//             {
+//                 this.state.isMatch ? 'no match' : <Article/>
+//             }
+//         </div>
 //     }
 // }
 //
-// let MyApp = connect(App)
 // LeactDom.render(
-//     <MyApp/>,
+//     <App/>,
 //     document.getElementById('app')
 // )
+// console.log('---')
 
 
 // 双向绑定
