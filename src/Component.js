@@ -30,7 +30,7 @@ class Component {
     componentDidMount() {
     }
 
-    componentWillReceiveProps(nextProps,state) {
+    componentWillReceiveProps(nextProps, state) {
     }
 
     shouldComponentUpdate(props, state) {
