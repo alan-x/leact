@@ -1,5 +1,5 @@
-import Leact from './../../../src/Leact'
-import Component from './../../../src/Component'
+import Leact, {LeactDom, Component} from '@followwinter/leact'
+
 
 class Detail extends Component {
     render() {

@@ -26,8 +26,8 @@
     "webpack-dev-server": "^3.1.5"
   },
   "dependencies": {
-    "@followwinter/leact": "^1.0.7",
-    "@followwinter/leact-ledux": "^1.0.4",
-    "@followwinter/leact-router": "^1.0.4"
+    "@followwinter/leact": "^1.0.8",
+    "@followwinter/leact-ledux": "^1.0.5",
+    "@followwinter/leact-router": "^1.0.7"
   }
 }

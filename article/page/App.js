@@ -1,10 +1,9 @@
-import Leact from './../../src/Leact'
-import LeactDom from './../../src/LeactDom'
-import Component from './../../src/Component'
-import Router, {Route, Link, withRouter} from './../leact-router'
+import Leact, {LeactDom, Component} from '@followwinter/leact'
+import connect from "@followwinter/leact-ledux";
+import {Route,Link} from '@followwinter/leact-router'
+
 import Articles from "./article/Articles";
 import Detail from "./detail/Detail";
-import connect from "../leact-ledux";
 
 class App extends Component {
     constructor(props) {

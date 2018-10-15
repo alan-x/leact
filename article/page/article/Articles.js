@@ -1,6 +1,6 @@
-import Leact from './../../../src/Leact'
-import Component from './../../../src/Component'
-import connect from './../../leact-ledux'
+import Leact, {LeactDom, Component} from '@followwinter/leact'
+import connect from '@followwinter/leact-ledux'
+
 import {getArticleList} from "../../reducer/articles";
 
 class Articles extends Component {
@@ -12,7 +12,6 @@ class Articles extends Component {
     }
 
     componentDidMount() {
-        console.log('Articles::componentDidMount')
         setTimeout(() => {
             this.props.getArticleList([
                 {
@@ -36,7 +35,6 @@ class Articles extends Component {
 
 
     componentWillReceiveProps(nextProps, state) {
-        console.log('Articles::componentWillReceiveProps')
         this.setState({
             articles: nextProps.articles
         })

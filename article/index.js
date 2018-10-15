@@ -1,8 +1,6 @@
-import Leact from './../src/Leact'
-import LeactDom from './../src/LeactDom'
-import Component from './../src/Component'
-import LRouter, {Route} from './leact-router'
-import {Provider, combineReducers, applyMiddleware, createStore, subscribe} from './leact-ledux'
+import Leact, {LeactDom, Component} from '@followwinter/leact'
+import {Provider, combineReducers, applyMiddleware, createStore, subscribe} from '@followwinter/leact-ledux'
+import Router, {Route} from '@followwinter/leact-router'
 import reducers from "./reducer/reducers";
 import App from "./page/App";
 
@@ -14,9 +12,9 @@ const store = createStore(
 
 LeactDom.render(
     <Provider store={store}>
-        <LRouter>
+        <Router>
             <App/>
-        </LRouter>
+        </Router>
     </Provider>,
     document.getElementById('app')
 )

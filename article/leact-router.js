@@ -1,16 +1,9 @@
-// import Leact from './Leact'
-// import LeactDom from './LeactDom'
-// import Component from './Component'
-import Leact from './../src/Leact'
-import LeactDom from './../src/LeactDom'
-import Component from './../src/Component'
-
+import Leact, {LeactDom, Component} from '@followwinter/leact'
 import Router from '@followwinter/Router'
 
 class LRouter extends Component {
     constructor(props) {
         super(props)
-        console.log('LRouter::constructor')
     }
 
     componentDidMount() {
@@ -19,7 +12,7 @@ class LRouter extends Component {
 
     render() {
         this.props.children = this.props.children.map((child) => {
-            child.props.store = this.props.store
+            child.props = {...child.props, ...this.props}
             return child
         })
         return this.props.children
@@ -39,7 +32,6 @@ class Route extends Component {
                 isMatch, match, data
             })
         })
-        console.log('Route::constructor')
     }
 
     render() {
