@@ -10,6 +10,7 @@ import Router from '@followwinter/Router'
 class LRouter extends Component {
     constructor(props) {
         super(props)
+        console.log('LRouter::constructor')
     }
 
     componentDidMount() {

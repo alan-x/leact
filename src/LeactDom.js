@@ -75,11 +75,13 @@ class LeactDom {
             component.props.children = vDom.children
             let compVDom = component.render()
             let element = this.render(compVDom, parent)
-            if (element === undefined) return
-            component.$$element = element
-            if (!component.$$element.$$component) {
-                component.$$element.$$component = component
+            if (element !== undefined) {
+                component.$$element = element
+                if (!component.$$element.$$component) {
+                    component.$$element.$$component = component
+                }
             }
+
             component.componentDidMount()
             return element
         }
