@@ -52,7 +52,6 @@ const store = createStore(
         counter, counter2
     }),
     {},
-    applyMiddleware(before)
 )
 
 

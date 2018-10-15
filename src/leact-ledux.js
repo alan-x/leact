@@ -1,4 +1,4 @@
-import Leact, {Component, LeactDom} from "@followwinter/leact";
+import Leact, {LeactDom, Component} from '@followwinter/leact'
 import {combineReducers, applyMiddleware, createStore, subscribe} from '@followwinter/ledux'
 
 function connect(mapStateToProps, mapDispatchToProps) {
@@ -6,27 +6,24 @@ function connect(mapStateToProps, mapDispatchToProps) {
         return class Control extends Component {
             constructor(props) {
                 super(props)
-                let store = props.store
-                // 第一次初始化
-                let nextProps = mapStateToProps && mapStateToProps(store.getState()) || {}
-                let actions = mapDispatchToProps && mapDispatchToProps(store.dispatch) || {}
-                this.state = {...nextProps, ...actions}
-                subscribe(() => {
-                    let nextProps = mapStateToProps && mapStateToProps(store.getState()) || {}
-                    let actions = mapDispatchToProps && mapDispatchToProps(store.dispatch) || {}
-                    this.setState({...nextProps, ...actions})
-                })
 
+                this.store = window.Store
+                // 第一次初始化
+                let nextProps = mapStateToProps && mapStateToProps(this.store.getState()) || {}
+                let actions = mapDispatchToProps && mapDispatchToProps(this.store.dispatch) || {}
+                this.state = {...nextProps, ...actions}
             }
 
-
-
             componentDidMount() {
-
+                this.unSub = subscribe(() => {
+                    let nextProps = mapStateToProps && mapStateToProps(this.store.getState()) || {}
+                    let actions = mapDispatchToProps && mapDispatchToProps(this.store.dispatch) || {}
+                    this.setState({...nextProps, ...actions})
+                })
             }
 
             componentWillUnmount() {
-                // this.unSub()
+                this.unSub()
             }
 
             render() {
@@ -43,6 +40,8 @@ class Provider extends Component {
 
     render() {
         let {store, children} = this.props
+        window.Store = this.props.store
+
         children = children.map(child => {
             child.props.store = store
             return child
@@ -52,4 +51,4 @@ class Provider extends Component {
 }
 
 export default connect
-export {Provider,combineReducers, applyMiddleware, createStore, subscribe}
+export {Provider, combineReducers, applyMiddleware, createStore, subscribe}

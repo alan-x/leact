@@ -1,6 +1,6 @@
 {
   "name": "@followwinter/leact-ledux",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "",
   "main": "dist/bundle.js",
   "scripts": {
@@ -35,6 +35,6 @@
   "homepage": "https://github.com/followWinter/route#readme",
   "dependencies": {
     "@followwinter/leact": "^1.0.3",
-    "@followwinter/ledux": "^1.0.6"
+    "@followwinter/ledux": "^1.0.12"
   }
 }
