@@ -1,6 +1,6 @@
 {
   "name": "@followwinter/leact-router",
-  "version": "1.0.4",
+  "version": "1.0.7",
   "description": "",
   "main": "dist/bundle.js",
   "scripts": {
@@ -34,7 +34,7 @@
   },
   "homepage": "https://github.com/followWinter/route#readme",
   "dependencies": {
-    "@followwinter/leact": "^1.0.7",
+    "@followwinter/leact": "^1.0.8",
     "@followwinter/router": "^1.0.1"
   }
 }
