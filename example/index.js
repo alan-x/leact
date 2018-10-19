@@ -19,14 +19,12 @@ Router.afterHook((match) => {
 // 注册路由
 Router.register('/article', (isMatch, match, data) => {
     console.log({isMatch, match, data})
-
     if (!isMatch) return
     $content.innerText = `这是文章页面, 收到数据: ${data.data}`
 })
 // 注册路由
 Router.register('/mine', (isMatch, match, data) => {
     console.log({isMatch, match, data})
-
     if (!isMatch) return
     $content.innerText = `这是个人中心, 收到数据: ${data.data}`
 })
@@ -44,7 +42,7 @@ $article.onclick = () => {
     Router.push('/article', {data: '文章'})
 }
 $detail.onclick = () => {
-    Router.push('/detail/sfsdf', {data: '文章详情'})
+    Router.push('/detail/1', {data: '文章详情'})
 }
 $mine.onclick = () => {
     Router.push('/mine', {data: '个人中心'})
