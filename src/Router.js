@@ -1,78 +1,96 @@
 class Router {
-    static beforeHook(before) {
-        window.Router.before = before
+
+    callbackMap = {}
+
+    match = {
+        path: '',
+        data: {}
     }
 
-    static afterHook(after) {
-        window.Router.after = after
+    before = () => {
     }
 
-    static init() {
-        this.push(window.location.pathname)
+    after = () => {
     }
 
-    static register(path, callback) {
+    beforeHook(before) {
+        this.before = before
+    }
+
+    afterHook(after) {
+        this.after = after
+    }
+
+    register(path, callback) {
         let unregister = () => {
-            delete window.Router.callbackMap[path]
+            delete this.callbackMap[path]
         }
-        window.Router.callbackMap[path] = callback
+        this.callbackMap[path] = callback
         return unregister
     }
 
-    static push(path, data = {}) {
-        window.Router.match = {
-            path, data
-        }
-        //['detail','1']
-        window.Router.before(path, data, window.Router.match)
-        let pathReal = path.split('/')
-        Object.keys(window.Router.callbackMap).forEach(key => {
-            let isMatch = false
+    init() {
+        this.push(window.location.pathname)
+    }
 
-            if (!key.includes(':') && key === path) {
-                isMatch = true
-            } else {
-                // ['detail',':id']
-                let pathPattern = key.split('/')
-                if (pathPattern.length !== pathReal.length) {
-                    isMatch = false
-                } else {
-                    let tempMatch = false
-                    while (pathPattern.length) {
-                        let pathPatternTmep = pathPattern.pop()
-                        let pathRealtemp = pathReal.pop()
-                        if (pathPatternTmep === pathRealtemp) {
-                            tempMatch = true
-                        } else if (pathPatternTmep.includes(':')) {
-                            window.Router.match = {
-                                ...window.Router.match,
-                                params: {[pathPatternTmep.replace(':', '')]: pathRealtemp}
-                            }
-                            tempMatch = true
-                        }
-                        tempMatch == false
-                        break
+    push(path, data = {}) {
+        this.match = {path, data}
+        this.before(path, data, this.match)
+
+        Object.keys(this.callbackMap).forEach(route => {
+            let callback = this.callbackMap[route]
+            window.history.pushState(data, '', path)
+
+            /*
+            如果不包含 : 匹配符
+            直接对比字符串就好了
+             */
+            if (!route.includes(':')) {
+                callback(route === path, this.match, data)
+                return
+            }
+
+            /*
+            如果包含 : 直接切分然后对比路径长度
+             */
+            let pathRealArr = path.split('/')
+            let pathArr = route.split('/')
+
+            if (pathArr.length !== pathRealArr.length) {
+                callback(false, this.match, data)
+                return
+            }
+
+            /*
+            长度相等并且包含 :
+             */
+            let tempMatch = true
+            while (pathArr.length) {
+
+                let pathPatternTmep = pathArr.pop()
+                let pathRealtemp = pathRealArr.pop()
+
+                if (pathPatternTmep.includes(':')) {
+                    this.match = {
+                        ...this.match,
+                        params: {[pathPatternTmep.replace(':', '')]: pathRealtemp}
                     }
-                    isMatch = tempMatch
+                } else if (pathPatternTmep !== pathRealtemp) {
+                    tempMatch = false
+                    break
                 }
             }
-            window.history.pushState(data, '', path)
-            window.Router.callbackMap[key](isMatch, window.Router.match, data || {})
+
+            callback(tempMatch, this.match, data)
+            return
+
         })
 
-        window.Router.after(window.Router.match)
+        this.after(this.match)
     }
 }
 
-window.Router = {}
-window.Router.callbackMap = {}
-window.Router.match = {
-    path: '',
-    data: {}
-}
-window.Router.before = () => {
-}
-window.Router.after = () => {
-}
+let router = new Router()
+window.router = router
 
-export default Router
+export default router
