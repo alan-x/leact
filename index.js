@@ -1,3 +1,3 @@
-import Router from "./src/Router";
+import Router from './src/Router'
 
 export default Router

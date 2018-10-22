@@ -90,7 +90,4 @@ class Router {
     }
 }
 
-let router = new Router()
-window.router = router
-
-export default router
+export default Router
