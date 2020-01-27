@@ -1,0 +1,17 @@
+{
+  "name": "example2",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "webpack-dev-server"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@followwinter/leact": "^1.0.4",
+    "@followwinter/leact-ledux": "^1.0.4",
+    "@followwinter/ledux": "^1.0.6"
+  }
+}
